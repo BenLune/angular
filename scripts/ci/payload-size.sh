@@ -39,7 +39,7 @@ addTimestamp() {
 
 # Write travis commit message to global variable $payloadData
 addMessage() {
-  message=$(git log --oneline $TRAVIS_COMMIT_RANGE)
+  message=$(cd $PROJECT_ROOT; git log --oneline $TRAVIS_COMMIT_RANGE)
   message=$(echo $message | sed 's/"/\\"/g' | sed 's/\\/\\\\/g')
   payloadData="$payloadData\"message\": \"$message\""
 }
@@ -49,8 +49,8 @@ addMessage() {
 # Update the change source to global variable $payloadData
 addChange() {
   yarnChanged=false
-  allChangedFiles=$(git diff --name-only $TRAVIS_COMMIT_RANGE $parentDir | wc -l)
-  allChangedFileNames=$(git diff --name-only $TRAVIS_COMMIT_RANGE $parentDir)
+  allChangedFiles=$(cd $PROJECT_ROOT; git diff --name-only $TRAVIS_COMMIT_RANGE $parentDir | wc -l)
+  allChangedFileNames=$(cd $PROJECT_ROOT; git diff --name-only $TRAVIS_COMMIT_RANGE $parentDir)
 
   if [[ $allChangedFileNames == *"yarn.lock"* ]]; then
     yarnChanged=true
@@ -85,7 +85,7 @@ uploadData() {
 
     # WARNING: FIREBASE_TOKEN should NOT be printed.
     set +x
-    firebase database:update --data "$payloadData" --project $PROJECT_NAME --confirm --token "$ANGULAR_PAYLOAD_FIREBASE_TOKEN" $dbPath
+    $PROJECT_ROOT/node_modules/.bin/firebase database:update --data "$payloadData" --project $PROJECT_NAME --confirm --token "$ANGULAR_PAYLOAD_FIREBASE_TOKEN" $dbPath
   fi
 }
 
