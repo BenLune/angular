@@ -278,10 +278,10 @@ export class Router {
    * Sets up the location change listener and performs the initial navigation.
    */
   initialNavigation(): void {
-    this.setUpLocationChangeListener();
+    /*this.setUpLocationChangeListener();
     if (this.navigationId === 0) {
       this.navigateByUrl(this.location.path(true), {replaceUrl: true});
-    }
+    }*/
   }
 
   /**
